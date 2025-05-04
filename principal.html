@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Tu Consumo de Agua</title>
+    <style>
+        body { text-align: left; font-family: Arial, sans-serif; padding-left: 20px; }
+        #configuracion {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: #555;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h2>Control de hidratación</h2>
+
+    <p>Agua recomendada: <span id="totalAgua"></span> L</p>
+    <p>Consumo actual: <span id="aguaConsumida">0</span> L</p>
+
+    <button onclick="sumarAgua(0.25)">Tomé 250ml</button>
+    <button onclick="sumarAgua(0.5)">Tomé 500ml</button>
+    <button onclick="window.location.href='estadisticas.html'">📊 Ver Estadísticas</button>
+
+    <h3 id="mensaje-objetivo" style="display: none; color: green;">
+        ¡Has completado tu objetivo! Sigue cosechando el buen hábito. 🎉
+    </h3>
+
+    <!-- Ícono de configuración -->
+    <div id="configuracion" onclick="window.location.href='configuracion.html'">⚙️</div>
+
+  <script>
+    let consumo = parseFloat(localStorage.getItem("aguaTotal")) || 0;
+    let total = parseFloat(localStorage.getItem("aguaRecomendada")) || 2.5;
+    let diasExito = parseInt(localStorage.getItem("diasExito")) || 0;
+    let historial = JSON.parse(localStorage.getItem("historialAgua")) || [];
+
+    document.getElementById("totalAgua").innerText = total;
+    document.getElementById("aguaConsumida").innerText = consumo.toFixed(2);
+
+    function sumarAgua(ml) {
+        consumo += ml;
+        localStorage.setItem("aguaTotal", consumo);
+        document.getElementById("aguaConsumida").innerText = consumo.toFixed(2);
+
+        // Registrar la hora exacta de consumo
+        let horaActual = new Date().toLocaleTimeString();
+        historial.push({ cantidad: ml, hora: horaActual });
+        localStorage.setItem("historialAgua", JSON.stringify(historial));
+
+        if (consumo >= total) {
+            // Solo incrementar días de éxito si es la primera vez que alcanza la meta en el día
+            let ultimoRegistro = localStorage.getItem("ultimoRegistroExito");
+            let fechaHoy = new Date().toLocaleDateString();
+
+            if (ultimoRegistro !== fechaHoy) {
+                diasExito++;
+                localStorage.setItem("diasExito", diasExito);
+                localStorage.setItem("ultimoRegistroExito", fechaHoy);
+            }
+
+            document.getElementById("mensaje-objetivo").style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>

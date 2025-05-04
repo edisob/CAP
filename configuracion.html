@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuración</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .container { max-width: 400px; margin: auto; }
+        button { padding: 10px 15px; font-size: 18px; background-color: #555; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #333; }
+
+        /* Botón de borrar caché con color diferenciado */
+        .cache-button {
+            background-color: #d9534f;
+        }
+
+        .cache-button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+    <h2>Configuración</h2>
+
+    <button onclick="window.location.href='recordatorios.html'">🎵 Personalización de Audio</button>
+    <button onclick="window.location.href='horarios.html'">⏰ Configuración de Horarios</button>
+    <br><br>
+
+    <!-- Botón para borrar caché -->
+    <button class="cache-button" onclick="borrarCache()">🗑️ Borrar caché</button>
+    <br><br>
+
+    <button onclick="window.location.href='principal.html'">Volver</button>
+
+    <script>
+        function borrarCache() {
+            let confirmacion = confirm("¿Seguro que quieres borrar la caché? Se eliminarán todos los datos guardados.");
+            if (confirmacion) {
+                localStorage.clear();
+                alert("Caché borrada. La aplicación se reiniciará.");
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

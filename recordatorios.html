@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Recordatorios de Hidratación</title>
+</head>
+<body>
+    <h2>Selecciona tu sonido de recordatorio</h2>
+
+    <!-- Audios con "A" mayúscula -->
+    <audio id="Audio1" src="Audio1.mp3"></Audio>
+    <audio id="Audio2" src="Audio2.mp3"></Audio>
+    <audio id="Audio3" src="Audio3.mp3"></Audio>
+    <audio id="Audio4" src="Audio4.mp3"></Audio>
+
+    <!-- Botones para escuchar los audios -->
+    <p>Audio 1:</p>
+    <button onclick="document.getElementById('Audio1').play()">🎵 Escuchar</button>
+    <button onclick="seleccionarAudio('Audio1')">✅ Elegir este</button>
+
+    <p>Audio 2:</p>
+    <button onclick="document.getElementById('Audio2').play()">🎵 Escuchar</button>
+    <button onclick="seleccionarAudio('Audio2')">✅ Elegir este</button>
+
+    <p>Audio 3:</p>
+    <button onclick="document.getElementById('Audio3').play()">🎵 Escuchar</button>
+    <button onclick="seleccionarAudio('Audio3')">✅ Elegir este</button>
+
+    <p>Audio 4:</p>
+    <button onclick="document.getElementById('Audio4').play()">🎵 Escuchar</button>
+    <button onclick="seleccionarAudio('Audio4')">✅ Elegir este</button>
+
+    <!-- Mensaje de confirmación -->
+    <p id="mensaje-seleccion"></p>
+
+    <button onclick="window.location.href='horarios.html'">Siguiente</button>
+
+    <script>
+    function seleccionarAudio(id) {
+        // Guardar el audio seleccionado en localStorage con la A mayúscula
+        localStorage.setItem("audioSeleccionado", id.charAt(0).toUpperCase() + id.slice(1));
+
+        // Mostrar mensaje de confirmación con la A mayúscula
+        document.getElementById("mensaje-seleccion").innerText = "Tu sonido actual es: " + id.charAt(0).toUpperCase() + id.slice(1);
+    }
+
+    // Recuperar selección previa al cargar la página
+    window.onload = function() {
+        let audioSeleccionado = localStorage.getItem("audioSeleccionado");
+        if (audioSeleccionado) {
+            document.getElementById("mensaje-seleccion").innerText = "Tu sonido actual es: " + audioSeleccionado;
+
+            // Reproducir automáticamente el sonido seleccionado para verificar
+            document.getElementById(audioSeleccionado).play();
+        }
+    };
+</script>
+</body>
+</html>

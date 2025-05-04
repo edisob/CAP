@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas de Hidratación</title>
+    <style>
+        body { text-align: left; font-family: Arial, sans-serif; padding-left: 20px; }
+        .container { max-width: 500px; margin: auto; }
+        .stat { font-size: 18px; margin: 20px 0; }
+        .bar-container { width: 100%; background-color: #ddd; border-radius: 10px; overflow: hidden; margin: 5px 0; }
+        .bar { height: 30px; line-height: 30px; background-color: #5A5A5A; color: white; text-align: center; font-weight: bold; transition: width 0.5s ease-in-out; }
+
+        /* Estilo del rectángulo de días cumplidos */
+        .rectangulo {
+            width: 200px;
+            height: 50px;
+            background-color: #A9A9A9;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+
+        #mostrarTodo {
+            display: none;
+            font-size: 16px;
+            color: blue;
+            cursor: pointer;
+        }
+
+        /* Botón más grande y centrado */
+        button {
+            display: block;
+            margin: 30px auto;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #5A5A5A;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Estadísticas de Hidratación</h2>
+
+        <p class="stat">Consumo promedio de agua:</p>
+        <div class="bar-container">
+            <div id="barraConsumo" class="bar" style="width: 5%;">0 L</div>
+        </div>
+
+        <p class="stat">Cantidad total de agua ingerida:</p>
+        <div class="bar-container">
+            <div id="barraAguaTotal" class="bar" style="width: 5%;">0 L</div>
+        </div>
+
+        <!-- Rectángulo con los días cumplidos -->
+        <div id="rectanguloDias" class="rectangulo">0 días cumplidos</div>
+
+        <h3>Últimos registros de consumo:</h3>
+        <p id="diaSemana"></p>
+        <ul id="historialConsumo"></ul>
+
+        <p id="mostrarTodo" onclick="mostrarListaCompleta()">Mostrar más...</p>
+
+        <button onclick="window.location.href='principal.html'">Volver</button>
+    </div>
+
+    <script>
+        let historial = JSON.parse(localStorage.getItem("historialAgua")) || [];
+        let aguaTotal = parseFloat(localStorage.getItem("aguaTotal")) || 0;
+        let diasExito = parseInt(localStorage.getItem("diasExito")) || 0;
+        let diasRegistrados = parseInt(localStorage.getItem("diasRegistrados")) || 1;
+        let ultimoRegistroExito = localStorage.getItem("ultimoRegistroExito") || "";
+
+        let consumoPromedio = (aguaTotal / diasRegistrados).toFixed(2);
+
+        function actualizarBarra(id, valor, maximo, unidad) {
+            let porcentaje = Math.max(Math.min((valor / maximo) * 100, 100), 5);
+            document.getElementById(id).style.width = porcentaje + "%";
+            document.getElementById(id).innerText = valor + " " + unidad;
+        }
+
+        function mostrarHistorial() {
+            let listaHistorial = document.getElementById("historialConsumo");
+            listaHistorial.innerHTML = "";
+            
+            let opciones = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+            let diaSemana = new Date().toLocaleDateString('es-ES', opciones);
+            document.getElementById("diaSemana").innerText = `Hoy es ${diaSemana}`;
+
+            if (historial.length === 0) {
+                listaHistorial.innerHTML = "<p>No hay registros de hidratación aún.</p>";
+                return;
+            }
+
+            let ultimosRegistros = historial.slice(-5);
+            ultimosRegistros.forEach(registro => {
+                let li = document.createElement("li");
+                li.innerText = `${registro.hora} - ${registro.cantidad}L`;
+                listaHistorial.appendChild(li);
+            });
+
+            if (historial.length > 5) {
+                document.getElementById("mostrarTodo").style.display = "block";
+            }
+        }
+
+        function mostrarListaCompleta() {
+            let listaHistorial = document.getElementById("historialConsumo");
+            listaHistorial.innerHTML = "";
+            historial.forEach(registro => {
+                let li = document.createElement("li");
+                li.innerText = `${registro.hora} - ${registro.cantidad}L`;
+                listaHistorial.appendChild(li);
+            });
+            document.getElementById("mostrarTodo").style.display = "none";
+        }
+
+        // Verificar si se alcanzó la meta hoy y actualizar días cumplidos
+        let fechaHoy = new Date().toLocaleDateString();
+        if (aguaTotal >= 2.5 && ultimoRegistroExito !== fechaHoy) {
+            diasExito++;
+            localStorage.setItem("diasExito", diasExito);
+            localStorage.setItem("ultimoRegistroExito", fechaHoy);
+        }
+
+        window.onload = function() {
+            actualizarBarra("barraConsumo", consumoPromedio, 4, "L");
+            actualizarBarra("barraAguaTotal", aguaTotal, 120, "L");
+            document.getElementById("rectanguloDias").innerText = `${diasExito} días cumplidos`;
+            mostrarHistorial();
+        };
+    </script>
+</body>
+</html>

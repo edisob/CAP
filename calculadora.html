@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculadora de Agua</title>
+</head>
+<body>
+    <h2>Calculadora de consumo de agua</h2>
+    <form id="calc-form">
+        Peso (kg): <input type="number" id="peso"><br>
+        Altura (cm): <input type="number" id="altura"><br>
+        Edad: <input type="number" id="edad"><br>
+        Nivel de actividad:
+        <select id="actividad">
+            <option value="1.2">Sedentario</option>
+            <option value="1.4">Activo</option>
+            <option value="1.6">Muy Activo</option>
+        </select><br>
+        <button type="button" onclick="calcularAgua()">Calcular</button>
+    </form>
+
+    <p id="resultado"></p>
+    <button onclick="window.location.href='recordatorios.html'">Siguiente</button>
+
+    <script>
+        function calcularAgua() {
+            let peso = document.getElementById("peso").value;
+            let actividad = document.getElementById("actividad").value;
+            let agua = (peso * 0.035) * actividad; 
+            document.getElementById("resultado").innerText = `Debes consumir aproximadamente ${agua.toFixed(2)} litros de agua al día.`;
+            localStorage.setItem("aguaRecomendada", aguaRecomendada.toFixed(2));
+        }
+    </script>
+</body>
+</html>

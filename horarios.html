@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurar Horarios</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .container { max-width: 400px; margin: auto; }
+        input { margin-bottom: 10px; padding: 5px; font-size: 16px; }
+        button { padding: 10px 15px; font-size: 18px; background-color: #555; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Configura tus horarios</h2>
+
+        <label>Hora de despertar:</label> <input type="time" id="despertar"><br>
+        <label>Hora de dormir:</label> <input type="time" id="dormir"><br>
+        <label>Desayuno:</label> <input type="time" id="desayuno"><br>
+        <label>Almuerzo:</label> <input type="time" id="almuerzo"><br>
+        <label>Cena:</label> <input type="time" id="cena"><br>
+        <label>Trabajo/estudio:</label> <input type="time" id="trabajo"><br>
+
+        <button onclick="guardarHorarios()">Guardar</button>
+        <button onclick="window.location.href='principal.html'">Siguiente</button>
+    </div>
+
+    <script>
+        function guardarHorarios() {
+            let horarios = {
+                despertar: document.getElementById("despertar").value,
+                dormir: document.getElementById("dormir").value,
+                desayuno: document.getElementById("desayuno").value,
+                almuerzo: document.getElementById("almuerzo").value,
+                cena: document.getElementById("cena").value,
+                trabajo: document.getElementById("trabajo").value
+            };
+
+            localStorage.setItem("horariosUsuario", JSON.stringify(horarios));
+            alert("Horarios guardados correctamente.");
+        }
+    </script>
+</body>
+</html>
